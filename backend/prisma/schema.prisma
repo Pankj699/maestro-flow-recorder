@@ -1,0 +1,62 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Device {
+  id             String    @id @default(uuid())
+  name           String
+  platform       String    // "ANDROID" | "IOS"
+  connectionType String    // "USB" | "WIRELESS" | "REMOTE" | "VIRTUAL"
+  status         String    // "ONLINE" | "OFFLINE" | "RECORDING" | "BUSY"
+  udid           String    @unique
+  resolution     String?
+  ipAddress      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  TestRun        TestRun[]
+}
+
+model Flow {
+  id               String            @id @default(uuid())
+  title            String
+  appId            String
+  description      String?
+  yamlContent      String
+  stepsJson        String
+  tags             String            // Comma separated tags
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  TestRun          TestRun[]
+  SessionVariables SessionVariable[]
+}
+
+model SessionVariable {
+  id           String   @id @default(uuid())
+  flowId       String
+  key          String
+  defaultValue String
+  description  String?
+  flow         Flow     @relation(fields: [flowId], references: [id], onDelete: Cascade)
+}
+
+model TestRun {
+  id             String   @id @default(uuid())
+  flowId         String
+  deviceId       String
+  status         String   // "PASSED" | "FAILED" | "RUNNING" | "PAUSED"
+  durationMs     Int      @default(0)
+  passedSteps    Int      @default(0)
+  failedSteps    Int      @default(0)
+  logContent     String?
+  htmlReportPath String?
+  jsonReportPath String?
+  junitXmlPath   String?
+  createdAt      DateTime @default(now())
+  flow           Flow     @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  device         Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}

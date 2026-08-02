@@ -1,0 +1,26 @@
+{
+  "name": "maestro-flow-recorder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-grade Maestro Flow Recorder for iOS and Android",
+  "scripts": {
+    "setup": "npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "cd backend && npm install && npx prisma generate",
+    "setup:frontend": "cd frontend && npm install",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "start": "cd backend && npm run start"
+  },
+  "keywords": [
+    "maestro",
+    "mobile-testing",
+    "recorder",
+    "codegen",
+    "android",
+    "ios",
+    "automation"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
